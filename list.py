@@ -1,0 +1,15 @@
+list=["Mango","Lichi","Banana","Apple","Orange"]
+
+print("Length of the list: ",len(list))
+print("First word of the list: ",list[0])
+print("Slicing: ",list[0:3])
+list.append("Grapes")
+print("Add: ",list)
+list.remove("Apple")
+print("Remove: ",list)
+list.pop(3)
+print("pop: ",list)
+list.reverse()
+print("reversed : ",list)
+list.clear()
+print("clear: ",list)
