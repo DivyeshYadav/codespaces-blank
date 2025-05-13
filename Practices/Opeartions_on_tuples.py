@@ -1,0 +1,5 @@
+t = ('Divyesh',10,4.9)
+print("Tuple: ",t)
+print("First element of the tuple: ",t[0])
+print("Last element of the tuple: ",t[2])
+print("Sliced tuple: ",t[0:2])
