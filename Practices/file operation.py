@@ -1,0 +1,7 @@
+f = open("Codingal.txt","r")
+print(f.read())
+f.close()
+f = open("Codingal.txt","r")
+print("\nTill 5th letter")
+print(f.read(5))
+f.close()
