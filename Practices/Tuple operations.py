@@ -1,0 +1,12 @@
+print("Empyty Tuple: ",())
+print("Tuple with integer: ",(1))
+print("Tuple with integers: ",(1,2,3,4,5))
+print("Tuple with mixed datatypes: ",(1,"Riyaan",3.5,))
+print("Tuple with the one of the element of the above mixed datatype tuple: ",("Riyaan"))
+print("Nested Tuple: ",(1,2,(3,4),5))
+print("Tuple with one of the above nested tuple element: ",(3,4))
+tuple = ("Divyesh")
+print("Slicing of a tuple: ",tuple[1:4])
+print("Illustration of iteration over a tuple: ")
+for i in tuple:
+    print("Hello ",i)
