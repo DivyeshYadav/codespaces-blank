@@ -1,0 +1,13 @@
+from tkinter import *
+window = Tk()
+window.title("Hi my name is Divyesh")
+window.geometry("400x300")
+label = Label(text = "Hi User",fg = "black", bg = "white")
+btn = Button(text = "Click Me",fg = "white", bg = "yellow")
+input = Entry(fg = "Red", bg = "blue")
+mul_line = Text(fg = "green", bg = "yellow",height = 20, width = 20)
+label.pack()
+btn.pack()
+input.pack()
+mul_line.pack()
+window.mainloop()
