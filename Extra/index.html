@@ -4,326 +4,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe Neon</title>
+    <title>Tic Tac Toe</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #0d0d0d;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: white;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            margin: 0;
-            color: #fff;
-        }
-
-        .container {
-            text-align: center;
-            width: 100%;
-            max-width: 450px;
         }
 
         h1 {
-            font-size: 2.5rem;
-            color: #0ff;
-            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
             margin-bottom: 20px;
-        }
-
-        input,
-        select,
-        button {
-            margin: 10px 0;
-            padding: 12px;
-            width: 90%;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            color: #fff;
-            background: #111;
-            box-shadow: 0 0 5px #0ff, 0 0 10px #0ff inset;
-        }
-
-        button {
-            cursor: pointer;
-            background: #111;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px #f0f, 0 0 30px #0ff inset;
-            background: #1a1a1a;
         }
 
         .board {
             display: grid;
-            grid-template-columns: repeat(3, 120px);
-            grid-template-rows: repeat(3, 120px);
-            gap: 8px;
-            justify-content: center;
-            margin: 25px auto;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
         }
 
         .cell {
-            width: 120px;
-            height: 120px;
-            background: #111;
-            border: 2px solid #0ff;
+            background-color: #1f1f1f;
+            border: 2px solid #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3rem;
+            font-size: 2.5rem;
             cursor: pointer;
-            color: #fff;
-            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
-            transition: 0.2s;
+            transition: background 0.3s;
         }
 
         .cell:hover {
-            background: #1a1a1a;
-            box-shadow: 0 0 10px #f0f, 0 0 20px #0ff;
+            background-color: #333;
         }
 
         #status {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 1.3rem;
-            color: #ff0;
-            text-shadow: 0 0 10px #ff0, 0 0 20px #f0f;
+            margin-top: 20px;
+            font-size: 1.2rem;
         }
 
-        .hidden {
-            display: none;
+        #reset {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        #authMsg {
-            margin-top: 8px;
-            font-size: 0.9rem;
-            color: #f66;
-            text-shadow: 0 0 8px #f33;
+        #reset:hover {
+            background-color: darkred;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
 
-        <!-- Login/Register -->
-        <div id="auth">
-            <h1>🌌 Tic Tac Toe Neon 🌌</h1>
-            <input type="text" id="username" placeholder="Enter Username" />
-            <input type="password" id="password" placeholder="Enter Password" />
-            <button onclick="register()">Register</button>
-            <button onclick="login()">Login</button>
-            <p id="authMsg"></p>
-        </div>
-
-        <!-- Game Menu -->
-        <div id="menu" class="hidden">
-            <h1>Welcome, <span id="playerName"></span></h1>
-            <button onclick="startFriendGame()">🎮 Play with a Friend</button>
-            <select id="difficulty">
-                <option value="easy">🌱 Easy Bot</option>
-                <option value="medium">⚡ Medium Bot</option>
-                <option value="hard">🔥 Hard Bot</option>
-                <option value="brutal">💀 Brutal Bot</option>
-                <option value="aggressive">🎯 Aggressive Bot</option>
-            </select>
-            <button onclick="startBotGame()">🤖 Play with Bot</button>
-        </div>
-
-        <!-- Game Board -->
-        <div id="game" class="hidden">
-            <div class="board" id="board"></div>
-            <div id="status"></div>
-            <button onclick="resetGame()">🔄 Restart</button>
-            <button onclick="goMenu()">⬅ Back to Menu</button>
-        </div>
-
-    </div>
+    <h1>🎮 Tic Tac Toe</h1>
+    <div class="board" id="board"></div>
+    <div id="status">Player X's Turn</div>
+    <button id="reset">Reset Game</button>
 
     <script>
-        // ----- Auth System -----
-        function register() {
-            const user = document.getElementById("username").value;
-            const pass = document.getElementById("password").value;
-            if (!user || !pass) {
-                authMsg.textContent = "⚠ Fill all fields!";
-                return;
-            }
-            if (localStorage.getItem(user)) {
-                authMsg.textContent = "⚠ User already exists!";
-                return;
-            }
-            localStorage.setItem(user, pass);
-            authMsg.textContent = "✅ Registered! Please login.";
+        const board = document.getElementById('board');
+        const status = document.getElementById('status');
+        const resetBtn = document.getElementById('reset');
+        let currentPlayer = 'X';
+        let gameActive = true;
+        const cells = Array(9).fill('');
+
+        // Create 9 cells
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.dataset.index = i;
+            cell.addEventListener('click', handleClick);
+            board.appendChild(cell);
         }
 
-        function login() {
-            const user = document.getElementById("username").value;
-            const pass = document.getElementById("password").value;
-            if (localStorage.getItem(user) === pass) {
-                document.getElementById("auth").classList.add("hidden");
-                document.getElementById("menu").classList.remove("hidden");
-                document.getElementById("playerName").textContent = user;
+        function handleClick(e) {
+            const index = e.target.dataset.index;
+            if (!gameActive || cells[index] !== '') return;
+
+            cells[index] = currentPlayer;
+            e.target.textContent = currentPlayer;
+
+            if (checkWinner()) {
+                status.textContent = `🎉 Player ${currentPlayer} Wins!`;
+                gameActive = false;
+            } else if (!cells.includes('')) {
+                status.textContent = "🤝 It's a Draw!";
+                gameActive = false;
             } else {
-                authMsg.textContent = "❌ Invalid username or password!";
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                status.textContent = `Player ${currentPlayer}'s Turn`;
             }
         }
 
-        function goMenu() {
-            document.getElementById("game").classList.add("hidden");
-            document.getElementById("menu").classList.remove("hidden");
-        }
-
-        // ----- Game Logic -----
-        let cells, statusText;
-        let currentPlayer, gameActive, gameState, mode, botLevel;
-
-        const winConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
-        ];
-
-        function initBoard() {
-            const boardDiv = document.getElementById("board");
-            boardDiv.innerHTML = "";
-            for (let i = 0; i < 9; i++) {
-                const cell = document.createElement("div");
-                cell.classList.add("cell");
-                cell.dataset.index = i;
-                cell.addEventListener("click", () => handleClick(i));
-                boardDiv.appendChild(cell);
-            }
-            cells = document.querySelectorAll(".cell");
-            statusText = document.getElementById("status");
-        }
-
-        function startFriendGame() {
-            mode = "friend";
-            startGame();
-        }
-
-        function startBotGame() {
-            mode = "bot";
-            botLevel = document.getElementById("difficulty").value;
-            startGame();
-        }
-
-        function startGame() {
-            document.getElementById("menu").classList.add("hidden");
-            document.getElementById("game").classList.remove("hidden");
-            initBoard();
-            currentPlayer = "X";
-            gameActive = true;
-            gameState = Array(9).fill("");
-            statusText.textContent = `Player ${currentPlayer}'s turn`;
-        }
-
-        function handleClick(index) {
-            if (!gameActive || gameState[index] !== "") return;
-            gameState[index] = currentPlayer;
-            cells[index].textContent = currentPlayer;
-
-            if (checkWin()) {
-                statusText.textContent = `✨ Player ${currentPlayer} Wins!`;
-                gameActive = false;
-                return;
-            }
-            if (!gameState.includes("")) {
-                statusText.textContent = "🤝 It's a Draw!";
-                gameActive = false;
-                return;
-            }
-
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-            statusText.textContent = `Player ${currentPlayer}'s turn`;
-
-            if (mode === "bot" && currentPlayer === "O") {
-                setTimeout(botMove, 500);
-            }
-        }
-
-        function checkWin() {
-            return winConditions.some(cond => {
-                const [a, b, c] = cond;
-                return gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c];
+        function checkWinner() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            return winPatterns.some(pattern => {
+                const [a, b, c] = pattern;
+                return cells[a] && cells[a] === cells[b] && cells[a] === cells[c];
             });
         }
 
-        // ----- Bot AI -----
-        function botMove() {
-            let move;
-            switch (botLevel) {
-                case "easy": move = easyBot(); break;
-                case "medium": move = mediumBot(); break;
-                case "hard": move = hardBot(); break;
-                case "brutal": move = minimaxBot("O").index; break;
-                case "aggressive": move = aggressiveBot(); break;
-            }
-            handleClick(move);
-        }
-
-        function easyBot() {
-            const empty = gameState.map((v, i) => v === "" ? i : null).filter(v => v !== null);
-            return empty[Math.floor(Math.random() * empty.length)];
-        }
-
-        function mediumBot() {
-            for (let [a, b, c] of winConditions) {
-                if (gameState[a] === "O" && gameState[b] === "O" && gameState[c] === "") return c;
-                if (gameState[a] === "O" && gameState[c] === "O" && gameState[b] === "") return b;
-                if (gameState[b] === "O" && gameState[c] === "O" && gameState[a] === "") return a;
-            }
-            for (let [a, b, c] of winConditions) {
-                if (gameState[a] === "X" && gameState[b] === "X" && gameState[c] === "") return c;
-                if (gameState[a] === "X" && gameState[c] === "X" && gameState[b] === "") return b;
-                if (gameState[b] === "X" && gameState[c] === "X" && gameState[a] === "") return a;
-            }
-            return easyBot();
-        }
-
-        function hardBot() {
-            if (gameState[4] === "") return 4;
-            return mediumBot();
-        }
-
-        function minimaxBot(player) {
-            const empty = gameState.map((v, i) => v === "" ? i : null).filter(v => v !== null);
-            if (checkWinner("X")) return { score: -10 };
-            if (checkWinner("O")) return { score: 10 };
-            if (empty.length === 0) return { score: 0 };
-
-            let moves = [];
-            for (let i of empty) {
-                gameState[i] = player;
-                let score = minimaxBot(player === "O" ? "X" : "O").score;
-                moves.push({ index: i, score });
-                gameState[i] = "";
-            }
-            if (player === "O") {
-                return moves.reduce((best, m) => m.score > best.score ? m : best);
-            } else {
-                return moves.reduce((best, m) => m.score < best.score ? m : best);
-            }
-        }
-
-        function aggressiveBot() {
-            const corners = [0, 2, 6, 8].filter(i => gameState[i] === "");
-            if (corners.length > 0) return corners[Math.floor(Math.random() * corners.length)];
-            return minimaxBot("O").index;
-        }
-
-        function checkWinner(p) {
-            return winConditions.some(([a, b, c]) => gameState[a] === p && gameState[b] === p && gameState[c] === p);
-        }
-
-        function resetGame() {
-            startGame();
-        }
+        resetBtn.addEventListener('click', () => {
+            cells.fill('');
+            document.querySelectorAll('.cell').forEach(cell => cell.textContent = '');
+            currentPlayer = 'X';
+            gameActive = true;
+            status.textContent = "Player X's Turn";
+        });
     </script>
+
 </body>
 
 </html>
