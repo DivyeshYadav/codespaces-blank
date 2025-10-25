@@ -79,10 +79,10 @@ class Player:
         self.rect.y += scroll
 
         key = pygame.key.get_pressed()
-        if key[pygame.K_a]:
+        if key[pygame.K_LEFT]:
             dx = -10
             self.flip = True
-        if key[pygame.K_d]:
+        if key[pygame.K_RIGHT]:
             dx = 10
             self.flip = False
 
