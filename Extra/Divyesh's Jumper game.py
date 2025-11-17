@@ -1,9 +1,9 @@
-import pygame
+import Pygamee
 import random
 import os # Import os for path handling
 
-pygame.init()
-pygame.mixer.init() # Initialize the mixer
+Pygamee.init()
+Pygamee.mixer.init() # Initialize the mixer
 
 # --- Game Title Constant ---
 GAME_TITLE = "Divyesh Yadav's Jumper Game"
@@ -11,10 +11,10 @@ GAME_TITLE = "Divyesh Yadav's Jumper Game"
 # --- Screen Setup ---
 S_WIDTH = 300
 S_HEIGHT = 600
-screen = pygame.display.set_mode((S_WIDTH, S_HEIGHT))
-pygame.display.set_caption(GAME_TITLE)
+screen = Pygamee.display.set_mode((S_WIDTH, S_HEIGHT))
+Pygamee.display.set_caption(GAME_TITLE)
 
-clock = pygame.time.Clock()
+clock = Pygamee.time.Clock()
 FPS = 60
 
 # --- Game Constants ---
@@ -25,23 +25,23 @@ WHITE = (255, 255, 255)
 SCROLL_THRESH = 200
 
 # --- Fonts ---
-font = pygame.font.SysFont('Arial', 24)
-large_font = pygame.font.SysFont('Arial', 36, bold=True)
-menu_title_font = pygame.font.SysFont('Arial', 42, bold=True)
+font = Pygamee.font.SysFont('Arial', 24)
+large_font = Pygamee.font.SysFont('Arial', 36, bold=True)
+menu_title_font = Pygamee.font.SysFont('Arial', 42, bold=True)
 
 
 # --- Load Images and Fallbacks ---
 try:
-    bgIMG = pygame.image.load("Extra/Background.png").convert_alpha()
-    PlayerIMG = pygame.image.load("Extra/Player-removebg-preview.png").convert_alpha()
-    PlatformIMG = pygame.image.load("Extra/Platform.png").convert_alpha()
-except pygame.error:
+    bgIMG = Pygamee.image.load("Extra/Background.png").convert_alpha()
+    PlayerIMG = Pygamee.image.load("Extra/Player-removebg-preview.png").convert_alpha()
+    PlatformIMG = Pygamee.image.load("Extra/Platform.png").convert_alpha()
+except Pygamee.error:
     print("Warning: Image files not found. Using fallback solid colors.")
-    bgIMG = pygame.Surface((S_WIDTH, S_HEIGHT))
+    bgIMG = Pygamee.Surface((S_WIDTH, S_HEIGHT))
     bgIMG.fill(WHITE)
-    PlayerIMG = pygame.Surface((45, 45))
+    PlayerIMG = Pygamee.Surface((45, 45))
     PlayerIMG.fill((255, 0, 0))
-    PlatformIMG = pygame.Surface((60, 20))
+    PlatformIMG = Pygamee.Surface((60, 20))
     PlatformIMG.fill((0, 255, 0))
 
 
@@ -50,12 +50,12 @@ MUSIC_FILE = "Zambolino - Way Back (freetouse.com).mp3"
 
 try:
     # Load the music file
-    pygame.mixer.music.load(MUSIC_FILE)
-    pygame.mixer.music.set_volume(0.4) # Keep volume moderate (40%)
+    Pygamee.mixer.music.load(MUSIC_FILE)
+    Pygamee.mixer.music.set_volume(0.4) # Keep volume moderate (40%)
     
     # Start the music immediately and make it loop indefinitely (-1)
-    pygame.mixer.music.play(-1)
-except pygame.error:
+    Pygamee.mixer.music.play(-1)
+except Pygamee.error:
     print(f"Warning: Could not load or play music file: {MUSIC_FILE}. Please ensure it is in the same directory.")
 # --- END AUDIO SETUP ---
 
@@ -63,10 +63,10 @@ except pygame.error:
 # --- Player Class ---
 class Player:
     def __init__(self, x, y):
-        self.image = pygame.transform.scale(PlayerIMG, (45, 45))
+        self.image = Pygamee.transform.scale(PlayerIMG, (45, 45))
         self.width = 25
         self.height = 40
-        self.rect = pygame.Rect(0, 0, self.width, self.height)
+        self.rect = Pygamee.Rect(0, 0, self.width, self.height)
         self.rect.center = (x, y)
         self.vel_y = 0
         self.flip = False
@@ -78,11 +78,11 @@ class Player:
         dy = 0
         self.rect.y += scroll
 
-        key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT]:
+        key = Pygamee.key.get_pressed()
+        if key[Pygamee.K_LEFT]:
             dx = -10
             self.flip = True
-        if key[pygame.K_RIGHT]:
+        if key[Pygamee.K_RIGHT]:
             dx = 10
             self.flip = False
 
@@ -119,14 +119,14 @@ class Player:
         return False
 
     def draw(self):
-        screen.blit(pygame.transform.flip(self.image, self.flip, False),
+        screen.blit(Pygamee.transform.flip(self.image, self.flip, False),
                     (self.rect.x - 12, self.rect.y - 5))
 
 # --- Platform Class ---
-class Platform(pygame.sprite.Sprite):
+class Platform(Pygamee.sprite.Sprite):
     def __init__(self, x, y, width):
         super().__init__()
-        self.image = pygame.transform.scale(PlatformIMG, (width, 20))
+        self.image = Pygamee.transform.scale(PlatformIMG, (width, 20))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -180,7 +180,7 @@ def reset_game():
 
 # --- Game Setup ---
 player = Player(S_WIDTH // 2, S_HEIGHT - 100)
-platform_group = pygame.sprite.Group()
+platform_group = Pygamee.sprite.Group()
 
 # Initial state
 game_over = False
@@ -195,15 +195,15 @@ while running:
     screen.blit(bgIMG, (0, 0))
 
     # Event handling
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for event in Pygamee.event.get():
+        if event.type == Pygamee.QUIT:
             running = False
             # Stop the music when the player closes the window
-            if pygame.mixer.music.get_busy():
-                pygame.mixer.music.stop()
+            if Pygamee.mixer.music.get_busy():
+                Pygamee.mixer.music.stop()
         
         # Check for start/restart key press
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        if event.type == Pygamee.KEYDOWN and event.key == Pygamee.K_SPACE:
             if menu_state or game_over:
                 menu_state = False
                 game_over, score, scroll = reset_game()
@@ -246,7 +246,7 @@ while running:
         draw_text(f'Max Score: {player.max_score}', font, BLACK, S_WIDTH // 2, S_HEIGHT // 2 + 30)
         draw_text('Press SPACE to Restart', font, BLACK, S_WIDTH // 2, S_HEIGHT // 2 + 90)
 
-    pygame.display.update()
+    Pygamee.display.update()
 
 # Final cleanup
-pygame.quit()
+Pygamee.quit()
